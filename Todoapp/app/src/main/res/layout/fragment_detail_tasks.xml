@@ -77,6 +77,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/name"
                 style="@style/text.Title"
+                android:textColor="@color/black"
                 android:background="@drawable/rounded_corner_shape"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,6 +95,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/description"
                 style="@style/text.Description"
+                android:textColor="@color/black"
                 android:background="@drawable/rounded_corner_shape"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

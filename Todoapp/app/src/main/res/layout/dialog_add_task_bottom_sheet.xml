@@ -34,6 +34,7 @@
                     android:focusedByDefault="true"
                     android:background="@drawable/rounded_corner_shape"
                     style="@style/text.Title"
+                    android:textColor="@color/black"
                     android:textAlignment="textStart"
                     android:hint="@string/hint_new_task" />
 
@@ -58,6 +59,7 @@
                 android:focusedByDefault="true"
                 android:background="@drawable/rounded_corner_shape"
                 style="@style/text.Description"
+                android:textColor="@color/black"
                 android:textAlignment="textStart"
                 android:hint="@string/hint_full_description" />
 
