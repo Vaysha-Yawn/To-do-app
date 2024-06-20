@@ -20,6 +20,8 @@
     <style name="text.Description">
         <item name="android:textSize">16sp</item>
     </style>
-
+    <style name="text.Date">
+        <item name="android:textSize">12sp</item>
+    </style>
 
 </resources>

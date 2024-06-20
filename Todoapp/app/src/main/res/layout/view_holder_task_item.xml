@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_corner_shape"
-    android:padding="10dp"
-    android:layout_marginBottom="24dp">
+    android:padding="5dp"
+    android:backgroundTint="@color/action"
+    android:layout_marginBottom="12dp">
 
     <ImageView
         android:id="@+id/status"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/in_progress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,8 +20,8 @@
 
     <ImageView
         android:id="@+id/menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/menu_task"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,12 +29,12 @@
 
     <TextView
         android:id="@+id/date"
-        style="@style/text.Description"
+        style="@style/text.Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="10.04.2024 10:55"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/menu"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/status"
@@ -41,13 +42,13 @@
 
     <TextView
         android:id="@+id/short_description"
-        style="@style/text.Title"
+        style="@style/text.Description"
         android:layout_width="wrap_content"
         android:maxWidth="210dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:text="Задача кратко"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/menu"
         app:layout_constraintHorizontal_bias="0.0"
