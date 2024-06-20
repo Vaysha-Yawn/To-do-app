@@ -59,21 +59,19 @@ class TasksViewModel @Inject constructor(
         }
     }
     private fun addNewTask(name: String, description: String) {
-        val task =  useCase.addTaskUseCase.addNewTask(name, description)
+        val task = useCase.addTaskUseCase.addNewTask(name, description)
         setAddedTask(task)
     }
     private fun deleteTask(task: Task) {
         useCase.deleteTaskUseCase.deleteTask(task)
         setDeletedTask(task)
-        try {
-            useCase.deleteTaskUseCase.deleteTask(task)
-            setDeletedTask(task)
-        }catch (_:Exception){}
     }
+
     private fun updateProgress(task: Task, nextProgress: StateTask) {
         val updTask = useCase.updateTaskUseCase.updateProgress(task, nextProgress)
         setUpdatedTask(updTask)
     }
+
     private fun updateText(task: Task, newName: String, newDescription: String) {
         useCase.updateTaskUseCase.updateText(task, newName, newDescription)
     }
@@ -104,11 +102,13 @@ class TasksViewModel @Inject constructor(
 
     private fun setDeletedTask(task: Task) {
         val targetTask =  findEl(task.id)
-        val index = listTask.indexOf(targetTask)
+        targetTask.let {
+            val index = listTask.indexOf(targetTask)
+            showListUpdate?.deleteRV(index)
+        }
         val listTaskCopy = listTask.toMutableList()
         listTaskCopy.remove(targetTask)
         listTask = listTaskCopy
-        showListUpdate?.deleteRV(index)
     }
 
     private fun findEl(id:Int):MutableLiveData<Task>?{

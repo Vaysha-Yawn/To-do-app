@@ -6,6 +6,7 @@ import com.test.todo_app.domain.model.Task
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.Random
 import javax.inject.Inject
 
 class AddTaskUseCase @Inject constructor(
@@ -20,13 +21,17 @@ class AddTaskUseCase @Inject constructor(
     private fun createTask(name: String, description: String): Task {
         val time = getDateAndTime()
         val task = Task(
-            id = 0,
+            id = generateId(),
             shortDescription = name,
             fullDescription = description,
             dateCreated = time,
             state = StateTask.newTask
         )
         return task
+    }
+
+    private fun generateId():Int{
+        return Random().nextInt()
     }
 
     private fun getDateAndTime(): String {

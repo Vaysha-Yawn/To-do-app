@@ -5,24 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.test.todo_app.R
-import com.test.todo_app.app.App
 import com.test.todo_app.databinding.DialogMenuTaskBinding
 import com.test.todo_app.domain.model.ActionTask
-import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.ListTaskAction
+import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DialogMenuTask(private val listActionTask: List<ActionTask>, private val viewModel: TasksViewModel) : DialogFragment() {
+class DialogMenuTask(
+    private val listActionTask: List<ActionTask>,
+    private val viewModel: TasksViewModel
+) : DialogFragment() {
 
     private lateinit var binding: DialogMenuTaskBinding
 
@@ -41,23 +37,33 @@ class DialogMenuTask(private val listActionTask: List<ActionTask>, private val v
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (viewModel.currentTask.value == null){
+        if (viewModel.currentTask.value == null) {
             closeDialog()
         }
         showActions()
         setListeners()
     }
 
-    private fun setListeners(){
-        if (viewModel.currentTask.value == null){
+    private fun setListeners() {
+        if (viewModel.currentTask.value == null) {
             return
         }
         binding.buttonInProgress.setOnClickListener {
-            viewModel.makeAction(ListTaskAction.MoveProgressTask(viewModel.currentTask.value!!, StateTask.inProgress))
+            viewModel.makeAction(
+                ListTaskAction.MoveProgressTask(
+                    viewModel.currentTask.value!!,
+                    StateTask.inProgress
+                )
+            )
             closeDialog()
         }
         binding.buttonDone.setOnClickListener {
-            viewModel.makeAction(ListTaskAction.MoveProgressTask(viewModel.currentTask.value!!, StateTask.done))
+            viewModel.makeAction(
+                ListTaskAction.MoveProgressTask(
+                    viewModel.currentTask.value!!,
+                    StateTask.done
+                )
+            )
             closeDialog()
         }
         binding.buttonDelete.setOnClickListener {
@@ -67,20 +73,20 @@ class DialogMenuTask(private val listActionTask: List<ActionTask>, private val v
         }
     }
 
-    private fun closeDialog(){
+    private fun closeDialog() {
         dialog?.dismiss()
     }
 
-    private fun showActions(){
+    private fun showActions() {
         show(binding.buttonInProgress, listActionTask.contains(ActionTask.MoveToInProgress))
         show(binding.buttonDone, listActionTask.contains(ActionTask.MakeDone))
         show(binding.buttonDelete, listActionTask.contains(ActionTask.Delete))
     }
 
-    private fun show(view:View, showBoolean:Boolean){
-        if (showBoolean){
+    private fun show(view: View, showBoolean: Boolean) {
+        if (showBoolean) {
             view.visibility = View.VISIBLE
-        }else{
+        } else {
             view.visibility = View.GONE
         }
     }

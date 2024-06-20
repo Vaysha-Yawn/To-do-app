@@ -3,6 +3,7 @@ package com.test.todo_app.repository.repository
 import android.content.Context
 import androidx.room.Room
 import com.test.todo_app.domain.interfaces.repository.TaskRepository
+import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
 import com.test.todo_app.repository.abstracts.AppDatabaseParam
 import com.test.todo_app.repository.tools.toTask
