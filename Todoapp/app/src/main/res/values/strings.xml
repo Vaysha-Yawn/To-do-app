@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Todo-app</string>
+    <string name="hint_new_task">Новая задача</string>
+    <string name="hint_full_description">Описание к задаче</string>
+    <string name="done">Выполнить</string>
+    <string name="delete">Удалить</string>
+    <string name="make_in_progress">Взять в работу</string>
+    <string name="status_in_progress">В работе</string>
+    <string name="status_done">Выполнена</string>
+    <string name="status_not_started">Не начата</string>
+    <string name="error_no_name">Пожалуйста, укажите название задачи!</string>
+</resources>

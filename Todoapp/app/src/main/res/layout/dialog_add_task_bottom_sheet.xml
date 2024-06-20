@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:padding="30dp"
+        android:orientation="vertical"
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_shape"
+        android:backgroundTint="@color/action"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_text_lay"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                app:helperText="Required*"
+                app:helperTextTextColor="@color/white"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusedByDefault="true"
+                    android:background="@drawable/rounded_corner_shape"
+                    style="@style/text.Title"
+                    android:textAlignment="textStart"
+                    android:hint="@string/hint_new_task" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <ImageView
+                android:layout_marginStart="10dp"
+                android:id="@+id/add_task"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:src="@drawable/done" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusedByDefault="true"
+                android:background="@drawable/rounded_corner_shape"
+                style="@style/text.Description"
+                android:textAlignment="textStart"
+                android:hint="@string/hint_full_description" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

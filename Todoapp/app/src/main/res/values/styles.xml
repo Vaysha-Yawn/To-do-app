@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RoundedCornersDialog" parent="@style/Theme.MaterialComponents.Dialog">
+        <item name="dialogCornerRadius">30dp</item>
+    </style>
+
+    <style name="text">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="text.TitleApp">
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="text.Title">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="text.Description">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
+</resources>
