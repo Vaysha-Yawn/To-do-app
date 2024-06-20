@@ -21,7 +21,7 @@ class UpdateTaskUseCase @Inject constructor(
         return updatedTask
     }
 
-    private fun updateTask(
+    fun updateTask(
         oldTask: Task,
         newName: String?,
         newDescription: String?,

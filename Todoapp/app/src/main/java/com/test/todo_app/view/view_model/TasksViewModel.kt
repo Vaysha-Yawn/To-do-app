@@ -65,6 +65,10 @@ class TasksViewModel @Inject constructor(
     private fun deleteTask(task: Task) {
         useCase.deleteTaskUseCase.deleteTask(task)
         setDeletedTask(task)
+        try {
+            useCase.deleteTaskUseCase.deleteTask(task)
+            setDeletedTask(task)
+        }catch (_:Exception){}
     }
     private fun updateProgress(task: Task, nextProgress: StateTask) {
         val updTask = useCase.updateTaskUseCase.updateProgress(task, nextProgress)
@@ -117,6 +121,11 @@ class TasksViewModel @Inject constructor(
         CoroutineScope(Dispatchers.Main).launch {
             showListUpdate?.showRV()
         }
+    }
+
+    fun updateCurrentTask() {
+        val updatedTask = useCase.updateTaskUseCase.updateTask(currentTask.value!!,  name.value, description.value, null)
+        currentTask.value = updatedTask
     }
 
 }

@@ -124,7 +124,7 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     }
 
     override fun showTaskMenuDialog(task: Task) {
-        update()
+        viewModel.updateCurrentTask()
         val types = whatWeCanDoWithTask(task.state)
         val dialog = DialogMenuTask(types, viewModel)
         dialog.show(childFragmentManager, DialogMenuTask.TAG)
