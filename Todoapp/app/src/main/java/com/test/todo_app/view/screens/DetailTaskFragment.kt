@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.textfield.TextInputEditText
 import com.test.todo_app.databinding.FragmentDetailTasksBinding
 import com.test.todo_app.domain.interfaces.view.ShowTaskMenuDialog
+import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
@@ -42,7 +44,7 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[TasksViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[TasksViewModel::class.java]
         setCurrentTask()
         val currentTask = viewModel.currentTask
 
@@ -125,7 +127,7 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     override fun showTaskMenuDialog(task: Task) {
         viewModel.updateCurrentTask()
         val types = whatWeCanDoWithTask(task.state)
-        val dialog = DialogMenuTask(types, viewModel)
+        val dialog = DialogMenuTask.getInstance(task, types)
         dialog.show(childFragmentManager, DialogMenuTask.TAG)
     }
 

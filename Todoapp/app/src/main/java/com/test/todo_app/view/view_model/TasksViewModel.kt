@@ -23,7 +23,7 @@ class TasksViewModel @Inject constructor(
     var listTask = listOf<MutableLiveData<Task>>()
     private var showListUpdate: ShowListUpdate? = null
 
-    // detail, add, menu
+    // detail
     var currentTask: MutableLiveData<Task> = MutableLiveData()
     var name: MutableLiveData<String> = MutableLiveData()
     var description: MutableLiveData<String> = MutableLiveData()
@@ -73,7 +73,8 @@ class TasksViewModel @Inject constructor(
     }
 
     private fun updateText(task: Task, newName: String, newDescription: String) {
-        useCase.updateTaskUseCase.updateText(task, newName, newDescription)
+        val updTask = useCase.updateTaskUseCase.updateText(task, newName, newDescription)
+        setUpdatedTask(updTask)
     }
 
     private fun setUpdatedTask(updTask: Task) {

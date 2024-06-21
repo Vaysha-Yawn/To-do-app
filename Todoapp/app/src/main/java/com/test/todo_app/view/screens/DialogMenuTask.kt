@@ -1,26 +1,28 @@
 package com.test.todo_app.view.screens
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
 import com.test.todo_app.R
 import com.test.todo_app.databinding.DialogMenuTaskBinding
+import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ActionTask
-import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
-import com.test.todo_app.view.view_model.TasksViewModel
+import com.test.todo_app.domain.model.Task
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DialogMenuTask(
-    private val listActionTask: List<ActionTask>,
-    private val viewModel: TasksViewModel
-) : DialogFragment() {
+class DialogMenuTask() : DialogFragment() {
 
     private lateinit var binding: DialogMenuTaskBinding
+    private var taskMenuResponse: TaskMenuResponse? = null
+    private var showInProgress: Boolean = false
+    private var showDone: Boolean = false
+    private var showDelete: Boolean = false
+    private var task: Task? = null
 
     override fun getTheme() = R.style.RoundedCornersDialog
 
@@ -34,42 +36,41 @@ class DialogMenuTask(
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (viewModel.currentTask.value == null) {
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            taskMenuResponse = (context as TaskMenuResponse)
+        } catch (e: Exception) {
             closeDialog()
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getArgsFromBundle()
         showActions()
         setListeners()
+        if (taskMenuResponse == null) {
+            closeDialog()
+            return
+        }
     }
 
     private fun setListeners() {
-        if (viewModel.currentTask.value == null) {
-            return
-        }
         binding.buttonInProgress.setOnClickListener {
-            viewModel.makeAction(
-                ListTaskAction.MoveProgressTask(
-                    viewModel.currentTask.value!!,
-                    StateTask.inProgress
-                )
-            )
-            closeDialog()
+            if (task!=null){
+                taskMenuResponse?.toInProgress(this, task!!)
+            }
         }
         binding.buttonDone.setOnClickListener {
-            viewModel.makeAction(
-                ListTaskAction.MoveProgressTask(
-                    viewModel.currentTask.value!!,
-                    StateTask.done
-                )
-            )
-            closeDialog()
+            if (task!=null){
+                taskMenuResponse?.toDone(this, task!!)
+            }
         }
         binding.buttonDelete.setOnClickListener {
-            viewModel.makeAction(ListTaskAction.DeleteTask(viewModel.currentTask.value!!))
-            closeDialog()
-            findNavController().navigateUp()
+            if (task!=null){
+                taskMenuResponse?.toDelete(this, task!!)
+            }
         }
     }
 
@@ -78,9 +79,9 @@ class DialogMenuTask(
     }
 
     private fun showActions() {
-        show(binding.buttonInProgress, listActionTask.contains(ActionTask.MoveToInProgress))
-        show(binding.buttonDone, listActionTask.contains(ActionTask.MakeDone))
-        show(binding.buttonDelete, listActionTask.contains(ActionTask.Delete))
+        show(binding.buttonInProgress, showInProgress)
+        show(binding.buttonDone, showDone)
+        show(binding.buttonDelete, showDelete)
     }
 
     private fun show(view: View, showBoolean: Boolean) {
@@ -91,8 +92,29 @@ class DialogMenuTask(
         }
     }
 
+    private fun getArgsFromBundle() {
+        showInProgress = arguments?.getBoolean(argInProgress) ?: false
+        showDone = arguments?.getBoolean(argDone) ?: false
+        showDelete = arguments?.getBoolean(argDelete) ?: false
+        task = arguments?.getSerializable(argTask) as Task?
+    }
+
     companion object {
         const val TAG = "PurchaseConfirmationDialog"
+        val argInProgress = "progress"
+        val argDone = "done"
+        val argDelete = "delete"
+        val argTask = "task"
+        fun getInstance(task: Task, list: List<ActionTask>): DialogMenuTask {
+            val bundle = Bundle()
+            bundle.putBoolean(argInProgress, list.contains(ActionTask.MoveToInProgress))
+            bundle.putBoolean(argDone, list.contains(ActionTask.MakeDone))
+            bundle.putBoolean(argDelete, list.contains(ActionTask.Delete))
+            bundle.putSerializable(argTask, task)
+            val dialog = DialogMenuTask()
+            dialog.arguments = bundle
+            return dialog
+        }
     }
 }
 
