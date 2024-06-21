@@ -44,8 +44,8 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[TasksViewModel::class.java]
         viewModel.attachShowListUpdate(this)
-        showRV()
-        val listTaskAdapter = ListTaskAdapter(viewModel, this, this, viewLifecycleOwner)
+        showRV(viewModel.getListSize())
+        val listTaskAdapter = ListTaskAdapter(viewModel, this, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = listTaskAdapter
         binding.addTask.setOnClickListener {
@@ -82,8 +82,8 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
         binding.recyclerView.adapter?.notifyItemRemoved(position)
     }
 
-    override fun showRV() {
-        binding.recyclerView.adapter?.notifyItemInserted(viewModel.listTask.size)
+    override fun showRV(size:Int) {
+        binding.recyclerView.adapter?.notifyItemInserted(size)
     }
 
 }

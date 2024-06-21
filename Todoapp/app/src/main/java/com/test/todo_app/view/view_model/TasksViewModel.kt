@@ -7,6 +7,7 @@ import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
 import com.test.todo_app.domain.use_case.CRUDUseCases
+import com.test.todo_app.domain.use_case.ListTaskManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +17,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    val useCase: CRUDUseCases
+    val useCase: CRUDUseCases, val listM: ListTaskManager
 ) : ViewModel() {
 
-    // list
-    var listTask = listOf<MutableLiveData<Task>>()
+    // list screen
     private var showListUpdate: ShowListUpdate? = null
 
-    // detail
+    // detail screen
     var currentTask: MutableLiveData<Task> = MutableLiveData()
     var name: MutableLiveData<String> = MutableLiveData()
     var description: MutableLiveData<String> = MutableLiveData()
@@ -55,78 +55,53 @@ class TasksViewModel @Inject constructor(
     private fun loadTasks() {
         CoroutineScope(Dispatchers.IO).launch {
             val l =  useCase.readTasksUseCase.read()
-            showListTask(l)
+            listM.showListTask(l)
+            CoroutineScope(Dispatchers.Main).launch {
+                showListUpdate?.showRV(l.size)
+            }
         }
     }
+
     private fun addNewTask(name: String, description: String) {
         val task = useCase.addTaskUseCase.addNewTask(name, description)
-        setAddedTask(task)
+        val range = listM.setAddedTask(task)
+        showListUpdate?.updateRV(range)
+        showListUpdate?.addRV(range.first)
     }
+
     private fun deleteTask(task: Task) {
         useCase.deleteTaskUseCase.deleteTask(task)
-        setDeletedTask(task)
+        val index = listM.setDeletedTask(task)
+        if (index>=0){
+            showListUpdate?.deleteRV(index)
+        }
     }
 
     private fun updateProgress(task: Task, nextProgress: StateTask) {
         val updTask = useCase.updateTaskUseCase.updateProgress(task, nextProgress)
-        setUpdatedTask(updTask)
+        currentTask.value = updTask
+        val range = listM.setUpdatedTask(updTask)
+        showListUpdate?.updateRV(range)
     }
 
     private fun updateText(task: Task, newName: String, newDescription: String) {
         val updTask = useCase.updateTaskUseCase.updateText(task, newName, newDescription)
-        setUpdatedTask(updTask)
-    }
-
-    private fun setUpdatedTask(updTask: Task) {
         currentTask.value = updTask
-        var listTaskCopy = listTask.toList()
-        val targetTask = findEl(updTask.id)
-        targetTask?.value = updTask
-        listTaskCopy = listTaskCopy.sortedBy { it.value?.state }
-        val oldIndex = listTask.indexOf(targetTask)
-        val newIndex = listTaskCopy.indexOf(targetTask)
-        listTask = listTaskCopy
-        showListUpdate?.updateRV(oldIndex..newIndex)
-    }
-
-    private fun setAddedTask(task: Task) {
-        val listTaskCopy = listTask.toMutableList()
-        val taskM = MutableLiveData(task)
-        listTaskCopy.add(taskM)
-        val sortedListTask = listTaskCopy.sortedBy { it.value?.state }
-        val end = listTaskCopy.indexOf(taskM)
-        val start = sortedListTask.indexOf(taskM)
-        listTask = sortedListTask
-        showListUpdate?.updateRV(start..end)
-        showListUpdate?.addRV(start)
-    }
-
-    private fun setDeletedTask(task: Task) {
-        val targetTask =  findEl(task.id)
-        targetTask.let {
-            val index = listTask.indexOf(targetTask)
-            showListUpdate?.deleteRV(index)
-        }
-        val listTaskCopy = listTask.toMutableList()
-        listTaskCopy.remove(targetTask)
-        listTask = listTaskCopy
-    }
-
-    private fun findEl(id:Int):MutableLiveData<Task>?{
-        return listTask.find { it -> id == it.value!!.id }
-    }
-
-    private fun showListTask(list: List<Task>) {
-        listTask = list.sortedBy { it.state }
-            .map { MutableLiveData(it) }
-        CoroutineScope(Dispatchers.Main).launch {
-            showListUpdate?.showRV()
-        }
+        val range = listM.setUpdatedTask(updTask)
+        showListUpdate?.updateRV(range)
     }
 
     fun updateCurrentTask() {
         val updatedTask = useCase.updateTaskUseCase.updateTask(currentTask.value!!,  name.value, description.value, null)
         currentTask.value = updatedTask
+    }
+
+    fun getListSize(): Int {
+        return listM.getListSize()
+    }
+
+    fun getTask(position: Int): Task {
+        return listM.getTask(position)
     }
 
 }

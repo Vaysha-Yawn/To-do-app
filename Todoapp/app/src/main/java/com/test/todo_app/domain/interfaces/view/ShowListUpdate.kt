@@ -4,5 +4,5 @@ interface ShowListUpdate{
     fun updateRV(position: IntRange)
     fun addRV(position:Int)
     fun deleteRV(position:Int)
-    fun showRV()
+    fun showRV(size:Int)
 }

@@ -115,6 +115,9 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     }
 
     private fun update() {
+        if (viewModel.currentTask.value==null|| viewModel.name.value==null || viewModel.description.value==null){
+            return
+        }
         viewModel.makeAction(
             ListTaskAction.UpdateText(
                 viewModel.currentTask.value!!,

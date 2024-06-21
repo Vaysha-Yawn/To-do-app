@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.test.todo_app.R
-import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.interfaces.view.NavigateToFullTask
 import com.test.todo_app.domain.interfaces.view.ShowTaskMenuDialog
+import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.view.tools.getImgResByStatus
 import com.test.todo_app.view.view_model.TasksViewModel
 
@@ -18,8 +18,7 @@ class ListTaskAdapter(
     private val viewModel: TasksViewModel,
     private val showTaskMenuDialog: ShowTaskMenuDialog,
     private val navigateToFullTask: NavigateToFullTask,
-    private val viewLifecycleOwner: LifecycleOwner,
-    ) :
+) :
     RecyclerView.Adapter<ListTaskAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -43,24 +42,22 @@ class ListTaskAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val currentTask = viewModel.listTask[position]
-        currentTask.observe(viewLifecycleOwner){ task->
-            viewHolder.state.setImageResource(getImgResByStatus(task.state))
-            viewHolder.date.text = task.dateCreated
-            viewHolder.shortDescription.text = task.shortDescription
-            viewHolder.moreButton.setOnClickListener {
-                showTaskMenuDialog.showTaskMenuDialog(task)
-            }
-            if (task.state == StateTask.done) {
-                viewHolder.moreButton.visibility = View.GONE
-            }else{
-                viewHolder.moreButton.visibility = View.VISIBLE
-            }
-            viewHolder.itemView.setOnClickListener {
-                navigateToFullTask.navigateToFullTask(task)
-            }
+        val task = viewModel.getTask(position)
+        viewHolder.state.setImageResource(getImgResByStatus(task.state))
+        viewHolder.date.text = task.dateCreated
+        viewHolder.shortDescription.text = task.shortDescription
+        viewHolder.moreButton.setOnClickListener {
+            showTaskMenuDialog.showTaskMenuDialog(task)
+        }
+        if (task.state == StateTask.done) {
+            viewHolder.moreButton.visibility = View.GONE
+        } else {
+            viewHolder.moreButton.visibility = View.VISIBLE
+        }
+        viewHolder.itemView.setOnClickListener {
+            navigateToFullTask.navigateToFullTask(task)
         }
     }
 
-    override fun getItemCount() = viewModel.listTask.size
+    override fun getItemCount() = viewModel.getListSize()
 }
