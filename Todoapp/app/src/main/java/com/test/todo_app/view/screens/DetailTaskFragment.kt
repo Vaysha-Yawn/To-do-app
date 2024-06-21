@@ -9,13 +9,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.textfield.TextInputEditText
-import com.test.todo_app.app.App
 import com.test.todo_app.databinding.FragmentDetailTasksBinding
 import com.test.todo_app.domain.interfaces.view.ShowTaskMenuDialog
 import com.test.todo_app.domain.model.ListTaskAction
@@ -45,7 +43,6 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[TasksViewModel::class.java]
-
         setCurrentTask()
         val currentTask = viewModel.currentTask
 
@@ -56,10 +53,10 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
                 if (it.state == StateTask.done) {
                     menu.visibility = View.GONE
                 }
-                setStringToEdit(name, it.shortDescription)
-                setStringToEdit(description, it.fullDescription)
             }
         }
+        setStringToEdit(binding.name, viewModel.name.value)
+        setStringToEdit(binding.description, viewModel.description.value)
         with(binding) {
             setListenerToEdit(name, viewModel.name)
             setListenerToEdit(description, viewModel.description)
@@ -102,9 +99,11 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     }
 
     private fun setCurrentTask() {
-        viewModel.currentTask.value = args.task
-        viewModel.name.value = args.task.shortDescription
-        viewModel.description.value = args.task.fullDescription
+        if (viewModel.currentTask.value == null) {
+            viewModel.currentTask.value = args.task
+            viewModel.name.value = args.task.shortDescription
+            viewModel.description.value = args.task.fullDescription
+        }
     }
 
     private fun navigateBack() {
