@@ -121,7 +121,7 @@ class DialogMenuTask() : DialogFragment() {
 fun whatWeCanDoWithTask(currentStateTask: StateTask): List<ActionTask> {
     return when (currentStateTask) {
         StateTask.newTask -> listOf(ActionTask.Delete, ActionTask.MoveToInProgress)
-        StateTask.inProgress -> listOf(ActionTask.MakeDone)
-        StateTask.done -> listOf()
+        StateTask.inProgress -> listOf(ActionTask.Delete, ActionTask.MakeDone)
+        StateTask.done -> listOf(ActionTask.Delete)
     }
 }
