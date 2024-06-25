@@ -21,7 +21,7 @@ import com.test.todo_app.domain.interfaces.view.TaskAddResponse
 import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.view.list_adapter.ListTaskAdapter
-import com.test.todo_app.view.tools.validate
+
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +30,7 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
 
     private lateinit var viewModel: TasksViewModel
     private lateinit var binding: FragmentListTasksBinding
+    private lateinit var listTaskAdapter :ListTaskAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +45,7 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[TasksViewModel::class.java]
         viewModel.attachShowListUpdate(this)
-        showRV(viewModel.getListSize())
-        val listTaskAdapter = ListTaskAdapter(viewModel, this, this)
+        listTaskAdapter = ListTaskAdapter(viewModel.listM.listTask, this, this)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = listTaskAdapter
         binding.addTask.setOnClickListener {
@@ -70,20 +70,8 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
         findNavController().navigate(action)
     }
 
-    override fun updateRV(position: IntRange){
-        binding.recyclerView.adapter?.notifyItemRangeChanged(position.first, position.count())
-    }
-
-    override fun addRV(position:Int){
-        binding.recyclerView.adapter?.notifyItemInserted(position)
-    }
-
-    override fun deleteRV(position:Int){
-        binding.recyclerView.adapter?.notifyItemRemoved(position)
-    }
-
-    override fun showRV(size:Int) {
-        binding.recyclerView.adapter?.notifyItemInserted(size)
+    override fun updateRV(newList: List<Task>) {
+        listTaskAdapter.setData(newList)
     }
 
 }

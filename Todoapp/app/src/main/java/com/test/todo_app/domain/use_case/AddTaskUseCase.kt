@@ -1,6 +1,9 @@
 package com.test.todo_app.domain.use_case
 
+import androidx.fragment.app.DialogFragment
+import com.test.todo_app.R
 import com.test.todo_app.domain.interfaces.repository.TaskRepository
+import com.test.todo_app.domain.interfaces.view.TaskAddResponse
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
 import java.text.SimpleDateFormat
@@ -10,15 +13,33 @@ import java.util.Random
 import javax.inject.Inject
 
 class AddTaskUseCase @Inject constructor(
-    val repository: TaskRepository
+    val repository: TaskRepository, val listM: ListTaskManager
 ) {
-    fun addNewTask(name: String, description: String): Task {
-        val task = createTask(name, description)
+
+    fun invoke(name: String, description: String,):List<Task>?{
+        return if (validateTask(name)){
+            addNewTask(name, description)
+        }else null
+    }
+
+
+    private fun addNewTask(name: String, description: String, ):List<Task>{
+        val task = addNewTaskInRepository(name, description)
+        val newList = listM.setAddedTask(task)
+        return newList
+    }
+
+    private fun validateTask(name: String):Boolean {
+        return (name.trim() != "")
+    }
+
+    private fun addNewTaskInRepository(name: String, description: String): Task {
+        val task = createNewTask(name, description)
         repository.create(task)
         return task
     }
 
-    private fun createTask(name: String, description: String): Task {
+    private fun createNewTask(name: String, description: String): Task {
         val time = getDateAndTime()
         val task = Task(
             id = generateId(),

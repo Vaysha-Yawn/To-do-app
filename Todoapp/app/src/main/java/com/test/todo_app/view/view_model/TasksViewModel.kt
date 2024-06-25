@@ -1,8 +1,11 @@
 package com.test.todo_app.view.view_model
 
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.test.todo_app.R
 import com.test.todo_app.domain.interfaces.view.ShowListUpdate
+import com.test.todo_app.domain.interfaces.view.TaskAddResponse
 import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
@@ -41,7 +44,7 @@ class TasksViewModel @Inject constructor(
     fun makeAction(action: ListTaskAction) {
         when (action) {
             ListTaskAction.LoadPage -> loadTasks()
-            is ListTaskAction.AddNewTask -> addNewTask(action.name, action.description)
+            is ListTaskAction.AddNewTask -> createTask( action.dialog,  action.name, action.description, action.add)
             is ListTaskAction.DeleteTask -> deleteTask(action.task)
             is ListTaskAction.MoveProgressTask -> updateProgress(action.task, action.nextProgress)
             is ListTaskAction.UpdateText -> updateText(
@@ -52,43 +55,54 @@ class TasksViewModel @Inject constructor(
         }
     }
 
+    private fun createTask(
+        dialog: DialogFragment,
+        name: String,
+        description: String,
+        add: TaskAddResponse
+    ) {
+        val list = useCase.addTaskUseCase.invoke(name, description)
+        if (list!=null){
+            add.showSuccess(dialog)
+            clearTaskData()
+            showListUpdate?.updateRV(list)
+        }else{
+            add.showError(dialog, dialog.context?.getString(R.string.error_no_name)?:"")
+        }
+    }
+
     private fun loadTasks() {
         CoroutineScope(Dispatchers.IO).launch {
             val l =  useCase.readTasksUseCase.read()
             listM.showListTask(l)
             CoroutineScope(Dispatchers.Main).launch {
-                showListUpdate?.showRV(l.size)
+                showListUpdate?.updateRV(l)
             }
         }
     }
 
-    private fun addNewTask(name: String, description: String) {
-        val task = useCase.addTaskUseCase.addNewTask(name, description)
-        val range = listM.setAddedTask(task)
-        showListUpdate?.updateRV(range)
-        showListUpdate?.addRV(range.first)
-    }
-
     private fun deleteTask(task: Task) {
         useCase.deleteTaskUseCase.deleteTask(task)
-        val index = listM.setDeletedTask(task)
-        if (index>=0){
-            showListUpdate?.deleteRV(index)
-        }
+        val list = listM.setDeletedTask(task)
+        showListUpdate?.updateRV(list)
     }
 
     private fun updateProgress(task: Task, nextProgress: StateTask) {
         val updTask = useCase.updateTaskUseCase.updateProgress(task, nextProgress)
         currentTask.value = updTask
-        val range = listM.setUpdatedTask(updTask)
-        showListUpdate?.updateRV(range)
+        val list = listM.setUpdatedTask(updTask)
+        if (list!=null){
+            showListUpdate?.updateRV(list)
+        }
     }
 
     private fun updateText(task: Task, newName: String, newDescription: String) {
         val updTask = useCase.updateTaskUseCase.updateText(task, newName, newDescription)
         currentTask.value = updTask
-        val range = listM.setUpdatedTask(updTask)
-        showListUpdate?.updateRV(range)
+        val list = listM.setUpdatedTask(updTask)
+        if (list!=null){
+            showListUpdate?.updateRV(list)
+        }
     }
 
     fun updateCurrentTask() {

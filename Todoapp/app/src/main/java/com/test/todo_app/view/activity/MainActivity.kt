@@ -14,7 +14,6 @@ import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
-import com.test.todo_app.view.tools.validate
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -61,21 +60,14 @@ class MainActivity : AppCompatActivity(), TaskMenuResponse, TaskAddResponse {
     }
 
     override fun createTask(dialog: DialogFragment, name: String, description: String) {
-        if (validate(name)) {
-            viewModel.makeAction(
-                ListTaskAction.AddNewTask(
-                    name,
-                    description
-                )
-            )
-            dialog.dismiss()
-            viewModel.clearTaskData()
-        } else {
-            showError(getString(R.string.error_no_name))
-        }
+        viewModel.makeAction(ListTaskAction.AddNewTask(name, description, dialog, this))
     }
 
-    override fun showError(message: String) {
+    override fun showSuccess(dialog: DialogFragment) {
+        dialog.dismiss()
+    }
+
+    override fun showError(dialog: DialogFragment, message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

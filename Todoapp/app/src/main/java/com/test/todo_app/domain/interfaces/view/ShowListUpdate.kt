@@ -1,8 +1,7 @@
 package com.test.todo_app.domain.interfaces.view
 
+import com.test.todo_app.domain.model.Task
+
 interface ShowListUpdate{
-    fun updateRV(position: IntRange)
-    fun addRV(position:Int)
-    fun deleteRV(position:Int)
-    fun showRV(size:Int)
+    fun updateRV(newList: List<Task>)
 }

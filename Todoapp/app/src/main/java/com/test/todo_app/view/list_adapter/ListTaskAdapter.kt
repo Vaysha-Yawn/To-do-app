@@ -5,17 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.test.todo_app.R
 import com.test.todo_app.domain.interfaces.view.NavigateToFullTask
 import com.test.todo_app.domain.interfaces.view.ShowTaskMenuDialog
 import com.test.todo_app.domain.model.StateTask
+import com.test.todo_app.domain.model.Task
+import com.test.todo_app.view.tools.ListTaskDiffUtil
 import com.test.todo_app.view.tools.getImgResByStatus
-import com.test.todo_app.view.view_model.TasksViewModel
 
 class ListTaskAdapter(
-    private val viewModel: TasksViewModel,
+    private var list: List<Task>,
     private val showTaskMenuDialog: ShowTaskMenuDialog,
     private val navigateToFullTask: NavigateToFullTask,
 ) :
@@ -42,7 +43,7 @@ class ListTaskAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val task = viewModel.getTask(position)
+        val task = list[position]
         viewHolder.state.setImageResource(getImgResByStatus(task.state))
         viewHolder.date.text = task.dateCreated
         viewHolder.shortDescription.text = task.shortDescription
@@ -59,5 +60,12 @@ class ListTaskAdapter(
         }
     }
 
-    override fun getItemCount() = viewModel.getListSize()
+    fun setData(newList: List<Task>){
+        val diffUtil = ListTaskDiffUtil(list, newList)
+        val diffRes = DiffUtil.calculateDiff(diffUtil)
+        list = newList
+        diffRes.dispatchUpdatesTo(this)
+    }
+
+    override fun getItemCount() = list.size
 }

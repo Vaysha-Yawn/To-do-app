@@ -1,4 +1,4 @@
-package com.test.todo_app.repository.repository.hilt
+package com.test.todo_app.repository.hilt
 
 import android.app.Application
 import com.test.todo_app.domain.interfaces.repository.TaskRepository

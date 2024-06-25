@@ -6,7 +6,7 @@ import com.test.todo_app.domain.model.Task
 import javax.inject.Inject
 
 class UpdateTaskUseCase @Inject constructor(
-    val repository: TaskRepository
+    val repository: TaskRepository, val listM: ListTaskManager
 ) {
 
     fun updateProgress(task: Task, nextProgress: StateTask):Task {
