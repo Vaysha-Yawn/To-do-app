@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -17,10 +16,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.textfield.TextInputEditText
 import com.test.todo_app.databinding.FragmentDetailTasksBinding
 import com.test.todo_app.domain.interfaces.view.ShowTaskMenuDialog
-import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
-import com.test.todo_app.domain.model.Task
 import com.test.todo_app.domain.model.getResProgressColor
 import com.test.todo_app.domain.model.getResProgressString
 import com.test.todo_app.view.model.TaskView
@@ -116,20 +113,19 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     }
 
     private fun update() {
-        if (viewModel.currentTask.value==null|| viewModel.name.value==null || viewModel.description.value==null){
-            return
-        }
-        viewModel.makeAction(
-            ListTaskAction.UpdateText(
-                viewModel.currentTask.value!!,
-                viewModel.name.value!!,
-                viewModel.description.value!!
+        if (viewModel.currentTask.value != null || viewModel.name.value != null || viewModel.description.value != null) {
+            viewModel.makeAction(
+                ListTaskAction.UpdateText(
+                    viewModel.currentTask.value!!,
+                    viewModel.name.value!!,
+                    viewModel.description.value!!
+                )
             )
-        )
+        }
     }
 
     override fun showTaskMenuDialog(task: TaskView) {
-        viewModel.updateCurrentTask()
+        update()
         val types = whatWeCanDoWithTask(task.state)
         val dialog = DialogMenuTask.getInstance(task, types)
         dialog.show(childFragmentManager, DialogMenuTask.TAG)

@@ -13,6 +13,7 @@ import com.test.todo_app.domain.use_case.CRUDUseCases
 import com.test.todo_app.domain.use_case.ListTaskManager
 import com.test.todo_app.view.model.TaskView
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
-    val useCase: CRUDUseCases, val listM: ListTaskManager
+    private val useCase: CRUDUseCases, val listM: ListTaskManager
 ) : ViewModel() {
 
     // list screen
@@ -30,6 +31,12 @@ class TasksViewModel @Inject constructor(
     var currentTask: MutableLiveData<TaskView> = MutableLiveData()
     var name: MutableLiveData<String> = MutableLiveData()
     var description: MutableLiveData<String> = MutableLiveData()
+
+    private var jobLoadTasks:Job? = null
+
+    init {
+        loadTasks()
+    }
 
     fun attachShowListUpdate(s: ShowListUpdate) {
         showListUpdate = s
@@ -58,6 +65,7 @@ class TasksViewModel @Inject constructor(
                 action.newName,
                 action.newDescription
             )
+
         }
     }
 
@@ -78,11 +86,12 @@ class TasksViewModel @Inject constructor(
     }
 
     private fun loadTasks() {
-        val flow = useCase.readTasksUseCase()
-        flow.onEach { listTask ->
+        jobLoadTasks?.cancel()
+        jobLoadTasks = useCase.readTasksUseCase()
+            .onEach { listTask ->
             listM.setNewList(listTask)
-            showListUpdate?.updateRV(listTask)
-        }.launchIn(viewModelScope)
+            showListUpdate?.updateRV(listTask) }
+            .launchIn(viewModelScope)
     }
 
     private fun deleteTask(task: TaskView) {
@@ -108,18 +117,4 @@ class TasksViewModel @Inject constructor(
             showListUpdate?.updateRV(list)
         }
     }
-
-    fun updateCurrentTask() {
-        val updatedTask = useCase.updateTaskUseCase.updateTask(
-            currentTask.value!!,
-            name.value,
-            description.value,
-            null
-        )
-        currentTask.value = updatedTask
-    }
-
 }
-
-
-

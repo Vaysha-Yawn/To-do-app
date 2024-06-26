@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity(), TaskMenuResponse, TaskAddResponse {
             supportFragmentManager.findFragmentById(R.id.container) as NavHostFragment?
         navController = navHostFragment?.navController
         viewModel = ViewModelProvider(this)[TasksViewModel::class.java]
-        viewModel.makeAction(ListTaskAction.LoadPage)
     }
 
     override fun toDone(dialog: DialogFragment, task:TaskView) {
