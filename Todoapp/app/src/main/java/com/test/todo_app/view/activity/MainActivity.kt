@@ -14,6 +14,7 @@ import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
+import com.test.todo_app.view.model.TaskView
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity(), TaskMenuResponse, TaskAddResponse {
         viewModel.makeAction(ListTaskAction.LoadPage)
     }
 
-    override fun toDone(dialog: DialogFragment, task:Task) {
+    override fun toDone(dialog: DialogFragment, task:TaskView) {
         viewModel.makeAction(
             ListTaskAction.MoveProgressTask(
                 task,
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity(), TaskMenuResponse, TaskAddResponse {
         dialog.dismiss()
     }
 
-    override fun toInProgress(dialog: DialogFragment, task:Task) {
+    override fun toInProgress(dialog: DialogFragment, task:TaskView) {
         viewModel.makeAction(
             ListTaskAction.MoveProgressTask(
                 task,
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity(), TaskMenuResponse, TaskAddResponse {
         dialog.dismiss()
     }
 
-    override fun toDelete(dialog: DialogFragment, task:Task) {
+    override fun toDelete(dialog: DialogFragment, task:TaskView) {
         viewModel.makeAction(ListTaskAction.DeleteTask(task))
         dialog.dismiss()
         navController?.navigateUp()

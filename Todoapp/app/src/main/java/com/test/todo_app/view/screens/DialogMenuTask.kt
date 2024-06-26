@@ -12,6 +12,7 @@ import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ActionTask
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
+import com.test.todo_app.view.model.TaskView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +23,7 @@ class DialogMenuTask() : DialogFragment() {
     private var showInProgress: Boolean = false
     private var showDone: Boolean = false
     private var showDelete: Boolean = false
-    private var task: Task? = null
+    private var task: TaskView? = null
 
     override fun getTheme() = R.style.RoundedCornersDialog
 
@@ -96,7 +97,7 @@ class DialogMenuTask() : DialogFragment() {
         showInProgress = arguments?.getBoolean(argInProgress) ?: false
         showDone = arguments?.getBoolean(argDone) ?: false
         showDelete = arguments?.getBoolean(argDelete) ?: false
-        task = arguments?.getSerializable(argTask) as Task?
+        task = arguments?.getParcelable(argTask) as TaskView?
     }
 
     companion object {
@@ -105,12 +106,12 @@ class DialogMenuTask() : DialogFragment() {
         val argDone = "done"
         val argDelete = "delete"
         val argTask = "task"
-        fun getInstance(task: Task, list: List<ActionTask>): DialogMenuTask {
+        fun getInstance(task: TaskView, list: List<ActionTask>): DialogMenuTask {
             val bundle = Bundle()
             bundle.putBoolean(argInProgress, list.contains(ActionTask.MoveToInProgress))
             bundle.putBoolean(argDone, list.contains(ActionTask.MakeDone))
             bundle.putBoolean(argDelete, list.contains(ActionTask.Delete))
-            bundle.putSerializable(argTask, task)
+            bundle.putParcelable(argTask, task)
             val dialog = DialogMenuTask()
             dialog.arguments = bundle
             return dialog

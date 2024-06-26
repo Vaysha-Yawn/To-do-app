@@ -1,7 +1,7 @@
 buildscript {
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
-        classpath ("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
+        classpath(libs.kotlin.gradle.plugin)
+        classpath (libs.androidx.navigation.safe.args.gradle.plugin)
     }
     repositories {
         mavenCentral()

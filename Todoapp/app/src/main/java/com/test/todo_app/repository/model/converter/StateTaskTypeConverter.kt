@@ -1,4 +1,4 @@
-package com.test.todo_app.repository.tools
+package com.test.todo_app.repository.model.converter
 
 import androidx.room.TypeConverter
 import com.test.todo_app.domain.model.StateTask

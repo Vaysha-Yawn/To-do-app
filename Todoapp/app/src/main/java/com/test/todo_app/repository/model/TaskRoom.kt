@@ -1,10 +1,10 @@
-package com.test.todo_app.repository.entity
+package com.test.todo_app.repository.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.test.todo_app.domain.model.StateTask
-import com.test.todo_app.repository.tools.StateTaskTypeConverter
+import com.test.todo_app.repository.model.converter.StateTaskTypeConverter
 
 
 @Entity

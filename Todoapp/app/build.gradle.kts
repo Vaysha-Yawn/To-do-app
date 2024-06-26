@@ -4,7 +4,6 @@ plugins {
     id("com.google.devtools.ksp")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
 }
 
 android {
@@ -43,18 +42,12 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
     //hilt
     implementation(libs.hilt.android)
-    kapt(libs.dagger.hilt.android.compiler)
-
+    ksp(libs.dagger.hilt.android.compiler)
 
     implementation(libs.androidx.recyclerview)
-
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment.ktx)

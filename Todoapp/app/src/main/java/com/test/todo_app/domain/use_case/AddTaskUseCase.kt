@@ -6,6 +6,9 @@ import com.test.todo_app.domain.interfaces.repository.TaskRepository
 import com.test.todo_app.domain.interfaces.view.TaskAddResponse
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
+import com.test.todo_app.domain.model.convertors.toTask
+import com.test.todo_app.domain.model.convertors.toTaskView
+import com.test.todo_app.view.model.TaskView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -16,14 +19,14 @@ class AddTaskUseCase @Inject constructor(
     val repository: TaskRepository, val listM: ListTaskManager
 ) {
 
-    fun invoke(name: String, description: String,):List<Task>?{
+    operator fun invoke(name: String, description: String,):List<TaskView>?{
         return if (validateTask(name)){
             addNewTask(name, description)
         }else null
     }
 
 
-    private fun addNewTask(name: String, description: String, ):List<Task>{
+    private fun addNewTask(name: String, description: String, ):List<TaskView>{
         val task = addNewTaskInRepository(name, description)
         val newList = listM.setAddedTask(task)
         return newList
@@ -33,13 +36,13 @@ class AddTaskUseCase @Inject constructor(
         return (name.trim() != "")
     }
 
-    private fun addNewTaskInRepository(name: String, description: String): Task {
+    private fun addNewTaskInRepository(name: String, description: String): TaskView {
         val task = createNewTask(name, description)
-        repository.create(task)
+        repository.create(task.toTask())
         return task
     }
 
-    private fun createNewTask(name: String, description: String): Task {
+    private fun createNewTask(name: String, description: String): TaskView {
         val time = getDateAndTime()
         val task = Task(
             id = generateId(),
@@ -48,7 +51,7 @@ class AddTaskUseCase @Inject constructor(
             dateCreated = time,
             state = StateTask.newTask
         )
-        return task
+        return task.toTaskView()
     }
 
     private fun generateId():Int{

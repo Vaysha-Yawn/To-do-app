@@ -7,9 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class App : Application(){
-    lateinit var repository:TaskRepository
     override fun onCreate() {
         super.onCreate()
-        repository = RoomRepository(applicationContext)
     }
 }

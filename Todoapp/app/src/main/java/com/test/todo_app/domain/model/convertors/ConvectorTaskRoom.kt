@@ -1,7 +1,7 @@
-package com.test.todo_app.repository.tools
+package com.test.todo_app.domain.model.convertors
 
 import com.test.todo_app.domain.model.Task
-import com.test.todo_app.repository.entity.TaskRoom
+import com.test.todo_app.repository.model.TaskRoom
 
 
 fun TaskRoom.toTask(): Task {

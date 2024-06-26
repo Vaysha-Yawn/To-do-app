@@ -7,13 +7,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.test.todo_app.repository.entity.TaskRoom
+import com.test.todo_app.repository.model.TaskRoom
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface DAOTask {
-    @Query("SELECT * FROM taskroom")
-    suspend fun getAll(): List<TaskRoom>
+    @Query("SELECT * FROM taskroom ORDER BY state DESC")
+    fun getAll(): Flow<List<TaskRoom>>
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(taskRoom: TaskRoom)

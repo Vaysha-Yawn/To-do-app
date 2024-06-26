@@ -21,6 +21,7 @@ import com.test.todo_app.domain.interfaces.view.TaskAddResponse
 import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.view.list_adapter.ListTaskAdapter
+import com.test.todo_app.view.model.TaskView
 
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +54,7 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
         }
     }
 
-    override fun showTaskMenuDialog(task: Task) {
+    override fun showTaskMenuDialog(task: TaskView) {
         viewModel.currentTask.value = task
         val types = whatWeCanDoWithTask(task.state)
         val dialog = DialogMenuTask.getInstance(task, types)
@@ -65,12 +66,12 @@ class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask, Sh
         modalAddDialogBottomSheet.show(childFragmentManager, AddDialogBottomSheet.TAG)
     }
 
-    override fun navigateToFullTask(task: Task) {
+    override fun navigateToFullTask(task: TaskView) {
        val action = ListTasksFragmentDirections.actionListTasksFragmentToDetailTaskFragment(task)
         findNavController().navigate(action)
     }
 
-    override fun updateRV(newList: List<Task>) {
+    override fun updateRV(newList: List<TaskView>) {
         listTaskAdapter.setData(newList)
     }
 

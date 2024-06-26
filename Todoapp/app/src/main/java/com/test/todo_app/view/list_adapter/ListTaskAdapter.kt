@@ -11,12 +11,11 @@ import com.test.todo_app.R
 import com.test.todo_app.domain.interfaces.view.NavigateToFullTask
 import com.test.todo_app.domain.interfaces.view.ShowTaskMenuDialog
 import com.test.todo_app.domain.model.StateTask
-import com.test.todo_app.domain.model.Task
-import com.test.todo_app.view.tools.ListTaskDiffUtil
-import com.test.todo_app.view.tools.getImgResByStatus
+import com.test.todo_app.domain.model.getImgResByStatus
+import com.test.todo_app.view.model.TaskView
 
 class ListTaskAdapter(
-    private var list: List<Task>,
+    private var list: List<TaskView >,
     private val showTaskMenuDialog: ShowTaskMenuDialog,
     private val navigateToFullTask: NavigateToFullTask,
 ) :
@@ -44,7 +43,7 @@ class ListTaskAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val task = list[position]
-        viewHolder.state.setImageResource(getImgResByStatus(task.state))
+        viewHolder.state.setImageResource(task.state.getImgResByStatus())
         viewHolder.date.text = task.dateCreated
         viewHolder.shortDescription.text = task.shortDescription
         viewHolder.moreButton.setOnClickListener {
@@ -60,7 +59,7 @@ class ListTaskAdapter(
         }
     }
 
-    fun setData(newList: List<Task>){
+    fun setData(newList: List<TaskView>){
         val diffUtil = ListTaskDiffUtil(list, newList)
         val diffRes = DiffUtil.calculateDiff(diffUtil)
         list = newList

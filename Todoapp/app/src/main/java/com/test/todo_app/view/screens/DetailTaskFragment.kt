@@ -21,8 +21,9 @@ import com.test.todo_app.domain.interfaces.view.TaskMenuResponse
 import com.test.todo_app.domain.model.ListTaskAction
 import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
-import com.test.todo_app.view.tools.getResProgressColor
-import com.test.todo_app.view.tools.getResProgressString
+import com.test.todo_app.domain.model.getResProgressColor
+import com.test.todo_app.domain.model.getResProgressString
+import com.test.todo_app.view.model.TaskView
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,12 +85,12 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
     }
 
     private fun getProgressString(progress: StateTask): String {
-        val res = getResProgressString(progress)
+        val res = progress.getResProgressString()
         return ContextCompat.getString(requireContext(), res)
     }
 
     private fun getProgressColorStateList(progress: StateTask): ColorStateList {
-        val res = getResProgressColor(progress)
+        val res = progress.getResProgressColor()
         return ColorStateList.valueOf(ResourcesCompat.getColor(resources, res, null))
     }
 
@@ -127,7 +128,7 @@ class DetailTaskFragment : Fragment(), ShowTaskMenuDialog {
         )
     }
 
-    override fun showTaskMenuDialog(task: Task) {
+    override fun showTaskMenuDialog(task: TaskView) {
         viewModel.updateCurrentTask()
         val types = whatWeCanDoWithTask(task.state)
         val dialog = DialogMenuTask.getInstance(task, types)

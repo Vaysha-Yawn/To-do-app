@@ -3,13 +3,15 @@ package com.test.todo_app.repository.repository
 import android.content.Context
 import androidx.room.Room
 import com.test.todo_app.domain.interfaces.repository.TaskRepository
-import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.model.Task
+import com.test.todo_app.domain.model.convertors.toTask
+import com.test.todo_app.domain.model.convertors.toTaskRoom
 import com.test.todo_app.repository.abstracts.AppDatabaseParam
-import com.test.todo_app.repository.tools.toTask
-import com.test.todo_app.repository.tools.toTaskRoom
+import com.test.todo_app.repository.model.TaskRoom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Singleton
 
@@ -28,10 +30,7 @@ class RoomRepository(context: Context) : TaskRepository {
         }
     }
 
-    override suspend fun read(): List<Task> {
-        val all = dao.getAll().map { it.toTask() }
-        return all
-    }
+    override fun read(): Flow<List<TaskRoom>> = dao.getAll()
 
     override fun update(task: Task) {
         CoroutineScope(Dispatchers.IO).launch {

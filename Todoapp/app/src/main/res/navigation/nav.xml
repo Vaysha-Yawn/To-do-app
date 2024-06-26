@@ -21,7 +21,7 @@
         android:label="DetailTaskFragment">
         <argument
             android:name="task"
-            app:argType="com.test.todo_app.domain.model.Task"
+            app:argType="com.test.todo_app.view.model.TaskView"
             app:nullable="false" />
     </fragment>
 </navigation>

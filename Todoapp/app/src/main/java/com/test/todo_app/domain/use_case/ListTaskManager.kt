@@ -1,23 +1,25 @@
 package com.test.todo_app.domain.use_case
 
 import com.test.todo_app.domain.model.Task
+import com.test.todo_app.view.model.TaskView
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ListTaskManager @Inject constructor() {
-    var listTask = listOf<Task>()
+    var listTask = listOf<TaskView>()
 
-    fun setUpdatedTask(updTask: Task): List<Task>? {
+    fun setUpdatedTask(updTask: TaskView): List<TaskView>? {
         val listTaskCopy = listTask.toMutableList()
-        val oldIndex = findInd(listTask, updTask.id) ?: return null
+        val oldIndex = findInd(updTask.id) ?: return null
         listTaskCopy[oldIndex] = updTask
         val sortedList = listTaskCopy.sortedBy { it.state }
         listTask = sortedList
         return sortedList
     }
 
-    fun setAddedTask(task: Task): List<Task> {
+    fun setAddedTask(task: TaskView): List<TaskView> {
         val listTaskCopy = listTask.toMutableList()
         listTaskCopy.add(task)
         val sortedListTask = listTaskCopy.sortedBy { it.state }
@@ -25,31 +27,23 @@ class ListTaskManager @Inject constructor() {
         return sortedListTask
     }
 
-    fun setDeletedTask(task: Task): List<Task> {
+    fun setDeletedTask(task: TaskView): List<TaskView> {
         val listTaskCopy = listTask.toMutableList()
         listTaskCopy.remove(task)
         listTask = listTaskCopy
         return listTaskCopy
     }
 
-    private fun findInd(list:List<Task>, id: Int): Int? {
+    fun setNewList(list:List<TaskView>){
+        listTask = list
+    }
+
+    private fun findInd(id: Int): Int? {
         for((index, task) in listTask.withIndex()){
             if (task.id==id){
                 return index
             }
         }
         return null
-    }
-
-    fun showListTask(list: List<Task>) {
-        listTask = list.sortedBy { it.state }
-    }
-
-    fun getListSize(): Int {
-        return listTask.size
-    }
-
-    fun getTask(position: Int): Task {
-        return listTask[position]
     }
 }
