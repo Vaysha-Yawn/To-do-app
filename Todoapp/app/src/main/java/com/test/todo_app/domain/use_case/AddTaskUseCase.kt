@@ -16,30 +16,23 @@ import java.util.Random
 import javax.inject.Inject
 
 class AddTaskUseCase @Inject constructor(
-    val repository: TaskRepository, val listM: ListTaskManager
+    val repository: TaskRepository
 ) {
 
-    operator fun invoke(name: String, description: String,):List<TaskView>?{
+    operator fun invoke(name: String, description: String,):Boolean{
         return if (validateTask(name)){
-            addNewTask(name, description)
-        }else null
-    }
-
-
-    private fun addNewTask(name: String, description: String, ):List<TaskView>{
-        val task = addNewTaskInRepository(name, description)
-        val newList = listM.setAddedTask(task)
-        return newList
+            addNewTaskInRepository(name, description)
+            true
+        } else false
     }
 
     private fun validateTask(name: String):Boolean {
         return (name.trim() != "")
     }
 
-    private fun addNewTaskInRepository(name: String, description: String): TaskView {
+    private fun addNewTaskInRepository(name: String, description: String) {
         val task = createNewTask(name, description)
         repository.create(task.toTask())
-        return task
     }
 
     private fun createNewTask(name: String, description: String): TaskView {

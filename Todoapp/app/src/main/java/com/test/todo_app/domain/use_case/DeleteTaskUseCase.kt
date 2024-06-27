@@ -7,7 +7,7 @@ import com.test.todo_app.view.model.TaskView
 import javax.inject.Inject
 
 class DeleteTaskUseCase@Inject constructor(
-    val repository: TaskRepository, val listM: ListTaskManager
+    val repository: TaskRepository
 ) {
     operator fun invoke(task: TaskView) {
         repository.delete(task.toTask())
