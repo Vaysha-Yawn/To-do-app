@@ -5,7 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.test.todo_app.databinding.FragmentListTasksBinding
@@ -15,6 +19,9 @@ import com.test.todo_app.view.list_adapter.ListTaskAdapter
 import com.test.todo_app.view.model.TaskView
 import com.test.todo_app.view.view_model.TasksViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class ListTasksFragment : Fragment(), ShowTaskMenuDialog, NavigateToFullTask {

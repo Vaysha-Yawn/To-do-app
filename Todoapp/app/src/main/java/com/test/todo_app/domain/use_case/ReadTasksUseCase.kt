@@ -6,7 +6,9 @@ import com.test.todo_app.domain.model.convertors.toTask
 import com.test.todo_app.domain.model.convertors.toTaskView
 import com.test.todo_app.view.model.TaskView
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 class ReadTasksUseCase @Inject constructor(
@@ -18,7 +20,7 @@ class ReadTasksUseCase @Inject constructor(
     }
 
     private fun getTasksFromDB(): Flow<List<Task>> {
-        return repository.read().map { list -> list.map { task -> task.toTask() } }
+        return repository.read().map{ list -> list.map { task -> task.toTask() } }
     }
 
     private fun convertTasksFlowToUIModel(taskList: Flow<List<Task>>): Flow<List<TaskView>> {

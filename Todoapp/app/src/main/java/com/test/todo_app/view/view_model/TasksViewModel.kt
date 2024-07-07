@@ -3,7 +3,10 @@ package com.test.todo_app.view.view_model
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.test.todo_app.R
 import com.test.todo_app.domain.interfaces.view.TaskAddResponse
 import com.test.todo_app.domain.model.ListTaskAction
@@ -11,6 +14,13 @@ import com.test.todo_app.domain.model.StateTask
 import com.test.todo_app.domain.use_case.CRUDUseCases
 import com.test.todo_app.view.model.TaskView
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.zip
 import javax.inject.Inject
 
 
@@ -20,7 +30,7 @@ class TasksViewModel @Inject constructor(
 ) : ViewModel() {
 
     //list screen
-    val listTasks = useCase.readTasksUseCase().asLiveData()
+    var listTasks = useCase.readTasksUseCase().asLiveData()
 
     // detail screen
     var currentTask: MutableLiveData<TaskView> = MutableLiveData()
@@ -41,7 +51,6 @@ class TasksViewModel @Inject constructor(
                 action.description,
                 action.add
             )
-
             is ListTaskAction.DeleteTask -> deleteTask(action.task)
             is ListTaskAction.MoveProgressTask -> updateProgress(action.task, action.nextProgress)
             is ListTaskAction.UpdateText -> updateText(
@@ -49,7 +58,6 @@ class TasksViewModel @Inject constructor(
                 action.newName,
                 action.newDescription
             )
-
         }
     }
 
